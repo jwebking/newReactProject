@@ -1,25 +1,19 @@
-var HTMLWebpackPlugin = require('html-webpack-plugin');
-var HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
-    template: __dirname + '/app/index.html',
-    filename: 'index.html',
-    inject: 'body'
-});
+var path = require('path');//included in node, just have to require, not download
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: __dirname + '/app/index.js',
+    entry: './app/index.js',//grab the files linked to this
+    output: {
+        path: path.resolve(__dirname, 'dist'),//dirname resolves to specific directory
+        filename: 'index_bundle.js'//going to bundle all files into the bundle file
+    },
     module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: 'babel-loader'
-            }
+        rules: [
+            {test: /\.(js)$/, use: 'babel-loader' },
+            {test: /\.css$/, use: ['style-loader', 'css-loader']}
         ]
     },
-
-    output: {
-        filename: 'bundle.js',
-        path: __dirname + '/build'
-    },
-    plugins: [HTMLWebpackPluginConfig]
-};
+    plugins:[new HtmlWebpackPlugin({
+        template: 'app/index.html'
+    })]
+}
